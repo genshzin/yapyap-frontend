@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../../core/constants/api_constants.dart';
 
 class AppDrawer extends StatelessWidget {
   final int currentIndex;
@@ -22,6 +23,12 @@ class AppDrawer extends StatelessWidget {
       children: [
         Consumer<AuthProvider>(
           builder: (context, authProvider, child) {
+            final user = authProvider.user;
+            String? avatarUrl;
+            if (user != null && user.id.isNotEmpty) {
+              avatarUrl = '${ApiConstants.baseUrl}/api/users/${user.id}/profile-picture';
+            }
+            
             return DrawerHeader(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryFixed,
@@ -31,22 +38,25 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
+                    backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(
-                      Icons.person,
-                      size: 30,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                    child: avatarUrl == null
+                        ? Icon(
+                            Icons.person,
+                            size: 30,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          )
+                        : null,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    authProvider.user?.username ?? 'User',
+                    user?.username ?? 'User',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   Text(
-                    authProvider.user?.email ?? 'No email',
+                    user?.email ?? 'No email',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -55,8 +65,8 @@ class AppDrawer extends StatelessWidget {
           },
         ),
         const NavigationDrawerDestination(
-          icon: Icon(Icons.home),
-          label: Text('Home'),
+          icon: Icon(Icons.people),
+          label: Text('Friends'),
         ),
         const NavigationDrawerDestination(
           icon: Icon(Icons.chat),

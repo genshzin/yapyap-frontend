@@ -4,13 +4,15 @@ class Message {
   final String id;
   final String chatId;
   final User sender;
-  final String content;
+  String content;
   final String type;
   final DateTime createdAt;
-  final bool edited;
-  final DateTime? editedAt;
+  bool edited;
+  DateTime? editedAt;
   final List<ReadReceipt> readBy;
   final String? replyTo;
+  DateTime? deletedAt;
+  bool isDeleted ;
 
   Message({
     required this.id,
@@ -23,24 +25,49 @@ class Message {
     this.editedAt,
     this.readBy = const [],
     this.replyTo,
+    this.deletedAt,
+    this.isDeleted = false,
   });
-
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      id: json['_id'] ?? json['id'],
-      chatId: json['chatId'],
-      sender: User.fromJson(json['sender']),
-      content: json['content'],
+      id: json['_id'] ?? json['id'] ?? '',
+      chatId: json['chatId'] ?? '',
+      sender: json['sender'] != null 
+          ? (json['sender'] is Map<String, dynamic> 
+              ? User.fromJson(json['sender'])
+              : User.fromJson({
+                  '_id': json['sender'].toString(),
+                  'username': 'Unknown',
+                  'email': '',
+                  'createdAt': DateTime.now().toIso8601String()
+                }))
+          : User.fromJson({
+              '_id': 'unknown',
+              'username': 'Unknown',
+              'email': '',
+              'createdAt': DateTime.now().toIso8601String()
+            }),
+      content: json['content'] ?? '',
       type: json['type'] ?? 'text',
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
       edited: json['edited'] ?? false,
       editedAt: json['editedAt'] != null 
           ? DateTime.parse(json['editedAt']) 
           : null,
-      readBy: (json['readBy'] as List?)
-          ?.map((e) => ReadReceipt.fromJson(e))
-          .toList() ?? [],
+      readBy: json['readBy'] != null && json['readBy'] is List
+          ? (json['readBy'] as List)
+              .map((e) => e is Map<String, dynamic> ? ReadReceipt.fromJson(e) : null)
+              .where((e) => e != null)
+              .cast<ReadReceipt>()
+              .toList()
+          : [],
       replyTo: json['replyTo'],
+      deletedAt: json['deletedAt'] != null 
+          ? DateTime.parse(json['deletedAt']) 
+          : null,
+      isDeleted: json['isDeleted'] ?? false,
     );
   }
 
@@ -56,6 +83,8 @@ class Message {
       'editedAt': editedAt?.toIso8601String(),
       'readBy': readBy.map((e) => e.toJson()).toList(),
       'replyTo': replyTo,
+      'deletedAt': deletedAt?.toIso8601String(),
+      'isDeleted': isDeleted,
     };
   }
 
@@ -72,11 +101,12 @@ class ReadReceipt {
     required this.userId,
     required this.readAt,
   });
-
   factory ReadReceipt.fromJson(Map<String, dynamic> json) {
     return ReadReceipt(
-      userId: json['user'],
-      readAt: DateTime.parse(json['readAt']),
+      userId: json['user'] ?? json['userId'] ?? '',
+      readAt: json['readAt'] != null 
+          ? DateTime.parse(json['readAt']) 
+          : DateTime.now(),
     );
   }
 

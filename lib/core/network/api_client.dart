@@ -80,7 +80,18 @@ class ApiClient {
     return _dio.patch(path, data: data);
   }
 
-  Future<Response> delete(String path) {
-    return _dio.delete(path);
+  Future<Response> delete(String path, {Map<String, dynamic>? queryParameters, Object? data}) async {
+    try {
+      final response = await _dio.delete(
+        path,
+        queryParameters: queryParameters,
+        data: data,
+      );
+      return response;
+    } catch (e) {
+      // Log the error but let the calling code handle it
+      print('DELETE request error: $e');
+      rethrow;
+    }
   }
 }

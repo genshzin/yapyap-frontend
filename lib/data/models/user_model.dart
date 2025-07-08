@@ -2,38 +2,32 @@ class User {
   final String id;
   final String username;
   final String email;
-  final String? profilePicture;
+  final String? avatar;
   final bool isOnline;
   final DateTime? lastSeen;
   final DateTime createdAt;
-  final DateTime updatedAt;
 
   User({
     required this.id,
     required this.username,
     required this.email,
-    this.profilePicture,
+    this.avatar,
     this.isOnline = false,
     this.lastSeen,
     required this.createdAt,
-    required this.updatedAt,
   });
-
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
-      username: json['username']?.toString() ?? '',
-      email: json['email']?.toString() ?? '',
-      profilePicture: json['profilePicture']?.toString(),
+      id: json['_id'] ?? json['id'] ?? '',
+      username: json['username'] ?? 'Unknown',
+      email: json['email'] ?? '',
+      avatar: json['profilePictureUrl'],
       isOnline: json['isOnline'] ?? false,
       lastSeen: json['lastSeen'] != null 
           ? DateTime.parse(json['lastSeen']) 
           : null,
       createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null 
-          ? DateTime.parse(json['updatedAt'])
+          ? DateTime.parse(json['createdAt']) 
           : DateTime.now(),
     );
   }
@@ -43,11 +37,10 @@ class User {
       'id': id,
       'username': username,
       'email': email,
-      'profilePicture': profilePicture,
+      'avatar': avatar,
       'isOnline': isOnline,
       'lastSeen': lastSeen?.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -55,21 +48,19 @@ class User {
     String? id,
     String? username,
     String? email,
-    String? profilePicture,
+    String? avatar,
     bool? isOnline,
     DateTime? lastSeen,
     DateTime? createdAt,
-    DateTime? updatedAt,
   }) {
     return User(
       id: id ?? this.id,
       username: username ?? this.username,
       email: email ?? this.email,
-      profilePicture: profilePicture ?? this.profilePicture,
+      avatar: avatar ?? this.avatar,
       isOnline: isOnline ?? this.isOnline,
       lastSeen: lastSeen ?? this.lastSeen,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

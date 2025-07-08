@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/constants/app_theme.dart';
 import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/chat_provider.dart';
 import 'presentation/widgets/main_navigation.dart';
 import 'routes/route_generator.dart';
-import 'routes/app_routes.dart';
 import 'presentation/screens/auth/login_screen.dart';
+import 'presentation/providers/friendship_provider.dart';
 
 class YapYapApp extends StatelessWidget {
   const YapYapApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  Widget build(BuildContext context) {    return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => FriendshipProvider()),
       ],
       child: MaterialApp(
         title: 'YapYap',
@@ -22,7 +24,7 @@ class YapYapApp extends StatelessWidget {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: ThemeMode.system,
-        home: const AuthWrapper(), // Gunakan AuthWrapper untuk cek auth status
+        home: const AuthWrapper(), 
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );

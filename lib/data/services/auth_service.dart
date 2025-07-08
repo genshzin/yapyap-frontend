@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
 import '../../core/network/api_client.dart';
 import '../../core/constants/api_constants.dart';
 import '../models/user_model.dart';
@@ -31,6 +32,7 @@ class AuthService {
           await MultipartFile.fromFile(
             profilePicture.path,
             filename: 'profile.jpg',
+            contentType: MediaType('image', 'jpeg'),
           ),
         ));
       }
@@ -78,16 +80,30 @@ class AuthService {
         },
       );
 
-      print('[AuthService] Login response: ${response.data}');      if (response.data['success'] == true) {
+      print('[AuthService] Login response: ${response.data}');
+      if (response.data['success'] == true) {
+        // Convert the user data first
+        final userData = response.data['user'];
+        
+        // Add the base URL to the profile picture URL if it's a relative URL
+        if (userData['profilePictureUrl'] != null && 
+            userData['profilePictureUrl'].toString().startsWith('/')) {
+          userData['profilePictureUrl'] = 
+              '${ApiConstants.baseUrl}${userData['profilePictureUrl']}';
+        }
+        
+        final user = User.fromJson(userData);
+        print('[AuthService] Processed Avatar Url: ${user.avatar}');
+        
         // Save token
         await _saveToken(response.data['token']);
         // Save user data
-        await _saveUserData(User.fromJson(response.data['user']));
+        await _saveUserData(user);
         
         return {
           'success': true,
           'message': response.data['message'] ?? 'Login successful',
-          'user': User.fromJson(response.data['user']),
+          'user': user,
           'token': response.data['token'],
         };
       }

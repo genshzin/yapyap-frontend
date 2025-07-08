@@ -5,11 +5,11 @@ class Chat {
   final String id;
   final List<User> participants;
   final String type;
-  final Message? lastMessage;
+  Message? lastMessage;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  DateTime updatedAt;
   final bool isActive;
-  final int? unreadCount;
+  int unreadCount; // Make it mutable
 
   Chat({
     required this.id,
@@ -19,23 +19,38 @@ class Chat {
     required this.createdAt,
     required this.updatedAt,
     this.isActive = true,
-    this.unreadCount,
+    this.unreadCount = 0,
   });
 
-  factory Chat.fromJson(Map<String, dynamic> json) {
+  // Add method to update unread count
+  void updateUnreadCount(int count) {
+    unreadCount = count;
+  }
+
+  void markAsRead() {
+    unreadCount = 0;
+  }  factory Chat.fromJson(Map<String, dynamic> json) {
     return Chat(
-      id: json['_id'] ?? json['id'],
-      participants: (json['participants'] as List)
-          .map((e) => User.fromJson(e))
-          .toList(),
+      id: json['_id'] ?? json['id'] ?? '',
+      participants: json['participants'] != null 
+          ? (json['participants'] as List)
+              .map((e) => e is Map<String, dynamic> ? User.fromJson(e) : User.fromJson({'_id': e.toString(), 'username': 'Unknown', 'email': '', 'createdAt': DateTime.now().toIso8601String()}))
+              .toList()
+          : [],
       type: json['type'] ?? 'direct',
       lastMessage: json['lastMessage'] != null 
-          ? Message.fromJson(json['lastMessage']) 
+          ? (json['lastMessage'] is Map<String, dynamic> 
+              ? Message.fromJson(json['lastMessage']) 
+              : null)
           : null,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : DateTime.now(),
       isActive: json['isActive'] ?? true,
-      unreadCount: json['unreadCount'],
+      unreadCount: json['unreadCount'] ?? 0,
     );
   }
 

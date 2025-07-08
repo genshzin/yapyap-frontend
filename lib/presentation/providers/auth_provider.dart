@@ -9,10 +9,12 @@ class AuthProvider with ChangeNotifier {
   final SocketClient _socketClient = SocketClient();
 
   User? _user;
+  bool _isLoggedIn = false;
   bool _isLoading = false;
   String? _error;
 
   User? get user => _user;
+  bool get isLoggedIn => _isLoggedIn;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _user != null;
@@ -35,6 +37,7 @@ class AuthProvider with ChangeNotifier {
 
     if (result['success']) {
       _user = result['user'];
+      _isLoggedIn = true;
       notifyListeners();
       _setLoading(false);
       return true;
@@ -59,6 +62,7 @@ class AuthProvider with ChangeNotifier {
 
     if (result['success']) {
       _user = result['user'];
+      _isLoggedIn = true;
       await _socketClient.connect();
       notifyListeners();
       _setLoading(false);
@@ -77,11 +81,11 @@ class AuthProvider with ChangeNotifier {
     _socketClient.disconnect();
     
     _user = null;
+    _isLoggedIn = false;
     _clearError();
     _setLoading(false);
     notifyListeners();
   }
-
   Future<void> checkAuthStatus() async {
     print('[AuthProvider] Checking auth status...');
     
@@ -95,6 +99,7 @@ class AuthProvider with ChangeNotifier {
         if (userProfile['success']) {
           print('[AuthProvider] Token valid, setting user data');
           _user = userProfile['user'];
+          _isLoggedIn = true;
           await _socketClient.connect();
           notifyListeners();
         } else {
@@ -102,6 +107,7 @@ class AuthProvider with ChangeNotifier {
           // Token invalid, clear it
           await _authService.logout();
           _user = null;
+          _isLoggedIn = false;
           notifyListeners();
         }
       } catch (e) {
@@ -109,11 +115,13 @@ class AuthProvider with ChangeNotifier {
         // Token bermasalah, clear it
         await _authService.logout();
         _user = null;
+        _isLoggedIn = false;
         notifyListeners();
       }
     } else {
       print('[AuthProvider] No token found');
       _user = null;
+      _isLoggedIn = false;
       notifyListeners();
     }
   }
