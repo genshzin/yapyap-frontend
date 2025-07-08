@@ -29,7 +29,6 @@ class ProfilePageView extends StatelessWidget {
                       : null,
                   backgroundColor: Colors.grey.shade200,
                   onBackgroundImageError: (exception, stackTrace) {
-                    print('Error loading avatar: $exception');
                   },
                   child: avatarUrl == null
                       ? Text(

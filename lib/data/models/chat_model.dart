@@ -9,7 +9,7 @@ class Chat {
   final DateTime createdAt;
   DateTime updatedAt;
   final bool isActive;
-  int unreadCount; // Make it mutable
+  int unreadCount; 
 
   Chat({
     required this.id,
@@ -22,7 +22,7 @@ class Chat {
     this.unreadCount = 0,
   });
 
-  // Add method to update unread count
+  
   void updateUnreadCount(int count) {
     unreadCount = count;
   }
@@ -67,7 +67,6 @@ class Chat {
     };
   }
 
-  // Get the other participant in a direct chat
   User? getOtherParticipant(String currentUserId) {
     if (type == 'direct' && participants.length == 2) {
       return participants.firstWhere(
@@ -77,12 +76,11 @@ class Chat {
     return null;
   }
 
-  // Get chat display name
   String getDisplayName(String currentUserId) {
     if (type == 'direct') {
       final otherUser = getOtherParticipant(currentUserId);
       return otherUser?.username ?? 'Unknown User';
     }
-    return 'Group Chat'; // For future group chat support
+    return 'Group Chat'; 
   }
 }

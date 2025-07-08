@@ -35,9 +35,9 @@ class _FriendsScreenState extends State<FriendsScreen>
     super.dispose();
   }
 
-  // Method to handle navigation to chat with a friend
+  
   void _navigateToChat(String friendId, String friendName, String? friendAvatar) async {
-    // Show loading indicator
+    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -45,15 +45,15 @@ class _FriendsScreenState extends State<FriendsScreen>
     );
 
     try {
-      // Create or get chat room with the friend
+      
       final chatProvider = context.read<ChatProvider>();
       final result = await chatProvider.createOrGetChatWith(friendId);
 
-      // Hide loading dialog
+      
       if (context.mounted) Navigator.pop(context);
       
       if (result != null && context.mounted) {
-        // Navigate to chat screen
+        
         await Navigator.pushNamed(
           context,
           '/chat',
@@ -72,7 +72,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         );
       }
     } catch (e) {
-      // Hide loading dialog and show error
+      
       if (context.mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +103,7 @@ class _FriendsScreenState extends State<FriendsScreen>
             child: TabBarView(
               controller: _tabController,
               children: [
-                // Friends List Tab
+                
                 friendshipProvider.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : friendshipProvider.friends.isEmpty
@@ -175,7 +175,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                             },
                           ),
 
-                // Friend Requests Tab
+                
                 friendshipProvider.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : friendshipProvider.friendRequests.isEmpty

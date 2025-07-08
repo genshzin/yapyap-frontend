@@ -67,12 +67,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
-        // Jika sudah login, tampilkan MainNavigation
         if (authProvider.isAuthenticated) {
           return const MainNavigation();
         }
         
-        // Jika belum login, tampilkan LoginScreen
         return const LoginScreen();
       },
     );

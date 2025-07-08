@@ -49,9 +49,8 @@ class FriendshipService {
   Future<List<dynamic>> getFriendRequests() async {
     try {
       final response = await _apiClient.get(ApiConstants.listFriendRequests);
-      print("Friend requests API response: ${response.data}");
       
-      // Ensure the response data is properly processed
+      
       if (response.data is List) {
         return response.data;
       } else if (response.data is Map && response.data.containsKey('requests')) {
@@ -60,7 +59,6 @@ class FriendshipService {
         return [];
       }
     } catch (e) {
-      print("Error getting friend requests: $e");
       return [];
     }
   }
@@ -68,9 +66,8 @@ class FriendshipService {
   Future<List<dynamic>> getFriends() async {
     try {
       final response = await _apiClient.get(ApiConstants.listFriends);
-      print("Friends API response: ${response.data}");
       
-      // Ensure the response data is properly processed
+      
       if (response.data is List) {
         return response.data;
       } else if (response.data is Map && response.data.containsKey('friends')) {
@@ -79,7 +76,6 @@ class FriendshipService {
         return [];
       }
     } catch (e) {
-      print("Error getting friends: $e");
       return [];
     }
   }

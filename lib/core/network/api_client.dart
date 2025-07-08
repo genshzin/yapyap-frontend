@@ -19,20 +19,9 @@ class ApiClient {
       },
     ));
 
-    // Add logging interceptor for debugging
-    _dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      requestHeader: true,
-      responseHeader: false,
-      error: true,
-      logPrint: (obj) => print('[API] $obj'),
-    ));
-
-    // Add interceptor for auth token
+    
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        print('[API] Request: ${options.method} ${options.path}');
         final token = await _getToken();
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
@@ -40,13 +29,11 @@ class ApiClient {
         handler.next(options);
       },
       onResponse: (response, handler) {
-        print('[API] Response: ${response.statusCode} ${response.statusMessage}');
         handler.next(response);
       },
       onError: (error, handler) {
-        print('[API] Error: ${error.response?.statusCode} - ${error.message}');
         if (error.response?.statusCode == 401) {
-          // Token expired, redirect to login
+          
           _clearToken();
         }
         handler.next(error);
@@ -89,8 +76,6 @@ class ApiClient {
       );
       return response;
     } catch (e) {
-      // Log the error but let the calling code handle it
-      print('DELETE request error: $e');
       rethrow;
     }
   }

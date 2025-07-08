@@ -19,8 +19,7 @@ class RouteGenerator {
           builder: (_) => const FriendsScreen(),
         );
       case '/friend-requests':
-        // This will navigate to the friends screen
-        // The tab selection will need to be handled separately
+
         return MaterialPageRoute(
           builder: (_) => const FriendsScreen(),
         );

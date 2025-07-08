@@ -29,16 +29,13 @@ class SocketClient {
 
     _socket!.onConnect((_) {
       _isConnected = true;
-      print('Socket connected');
     });
 
     _socket!.onDisconnect((_) {
       _isConnected = false;
-      print('Socket disconnected');
     });
 
     _socket!.onConnectError((error) {
-      print('Socket connection error: $error');
     });
 
     _socket!.connect();

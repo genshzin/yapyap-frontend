@@ -22,8 +22,6 @@ class Friendship {
   });
 
   factory Friendship.fromJson(Map<String, dynamic> json) {
-    // Handle recipient which can be either an object with _id and username 
-    // or just a string ID
     String recipientId;
     String recipientName = 'Unknown User';
     String? recipientAvatar;

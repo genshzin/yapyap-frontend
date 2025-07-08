@@ -87,31 +87,25 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
   Future<void> checkAuthStatus() async {
-    print('[AuthProvider] Checking auth status...');
     
     final token = await _authService.getToken();
     if (token != null) {
-      print('[AuthProvider] Token found, validating...');
       
       try {
-        // Validate token dan ambil user data dari server
+        
         final userProfile = await _authService.getUserProfile();
         if (userProfile['success']) {
-          print('[AuthProvider] Token valid, setting user data');
           _user = userProfile['user'];
           _isLoggedIn = true;
           await _socketClient.connect();
           notifyListeners();
         } else {
-          print('[AuthProvider] Token invalid, clearing...');
-          // Token invalid, clear it
           await _authService.logout();
           _user = null;
           _isLoggedIn = false;
           notifyListeners();
         }
       } catch (e) {
-        print('[AuthProvider] Error validating token: $e');
         // Token bermasalah, clear it
         await _authService.logout();
         _user = null;
@@ -119,7 +113,6 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
       }
     } else {
-      print('[AuthProvider] No token found');
       _user = null;
       _isLoggedIn = false;
       notifyListeners();

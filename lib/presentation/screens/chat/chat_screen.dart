@@ -33,20 +33,19 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('Loading messages for chat: ${widget.chatId}');
       final authProvider = context.read<AuthProvider>();
       final currentUserId = authProvider.user?.id;
       
       if (currentUserId != null && _chatProvider != null) {
-        // Set current user ID in chat provider
+        
         _chatProvider!.setCurrentUserId(currentUserId);
         
-        // Join the specific chat room (emit socket event)
+        
         _chatProvider!.joinSpecificChatRoom(widget.chatId);
         
-        // Load messages and mark as read
+        
         _chatProvider!.loadMessagesAndMarkRead(widget.chatId, currentUserId).then((_) {
-          // Scroll to bottom after messages are loaded
+          
           _scrollToBottom();
         });
       }
@@ -61,32 +60,25 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    print('ChatScreen: *** DISPOSE CALLED ***');
-    print('ChatScreen: Disposing chat screen for chatId: ${widget.chatId}');
     
-    // Stop typing when leaving the screen
+    
     if (_isTyping && _chatProvider != null) {
-      print('ChatScreen: Stopping typing before dispose');
       _chatProvider!.stopTyping(widget.chatId);
     }
     
-    // Leave chat room when exiting screen
+    
     if (_chatProvider != null) {
-      print('ChatScreen: Calling leaveChatRoom for chatId: ${widget.chatId}');
       _chatProvider!.leaveChatRoom(widget.chatId);
       
-      // Clear current chat when leaving screen
-      print('ChatScreen: Calling clearMessages');
+      
       _chatProvider!.clearMessages();
     } else {
-      print('ChatScreen: _chatProvider is null, cannot leave room');
     }
     
     _messageController.dispose();
     _scrollController.dispose();
     _editController.dispose();
     
-    print('ChatScreen: *** DISPOSE COMPLETED ***');
     super.dispose();
   }
 
@@ -102,11 +94,11 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     try {
-      // The sendMessage function now just emits a socket event.
-      // The UI will update when the 'new_message' event is received.
+      
+      
       context.read<ChatProvider>().sendMessage(widget.chatId, content);
       
-      // Optimistically scroll to the bottom.
+      
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
@@ -129,11 +121,11 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatProvider = context.read<ChatProvider>();
     
     if (text.trim().isNotEmpty && !_isTyping) {
-      // Start typing
+      
       _isTyping = true;
       chatProvider.startTyping(widget.chatId);
     } else if (text.trim().isEmpty && _isTyping) {
-      // Stop typing
+      
       _isTyping = false;
       chatProvider.stopTyping(widget.chatId);
     }
@@ -165,7 +157,6 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
               onBackgroundImageError: avatarUrl.isNotEmpty
                   ? (exception, stackTrace) {
-                      print('Error loading avatar: $exception');
                     }
                   : null,
               child: avatarUrl.isEmpty
@@ -208,7 +199,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 }
 
-                // Auto scroll when messages change
+                
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (_scrollController.hasClients && messages.isNotEmpty) {
                     _scrollController.animateTo(
@@ -227,7 +218,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     final message = messages[index];
                     final isMe = message.sender.id == currentUserId;
 
-                    // Show deleted message placeholder
+                    
                     if (message.isDeleted) {
                       return Align(
                         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -249,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       );
                     }
 
-                    // Edit mode UI
+                    
                     if (_editingMessageId == message.id) {
                       return Align(
                         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -294,7 +285,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       );
                     }
 
-                    // Normal message bubble with long-press menu
+                    
                     return GestureDetector(
                       onLongPress: () => _showMessageMenu(context, message, isMe),
                       child: Align(

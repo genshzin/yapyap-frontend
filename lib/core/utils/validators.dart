@@ -1,6 +1,6 @@
-/// Form validation utilities for input fields
+
 class Validators {
-  // Email validation
+  
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -14,7 +14,7 @@ class Validators {
     return null;
   }
   
-  // Password validation
+  
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -24,17 +24,17 @@ class Validators {
       return 'Password must be at least 6 characters long';
     }
     
-    // Check for at least one uppercase letter
+    
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
       return 'Password must contain at least one uppercase letter';
     }
     
-    // Check for at least one lowercase letter
+    
     if (!RegExp(r'[a-z]').hasMatch(value)) {
       return 'Password must contain at least one lowercase letter';
     }
     
-    // Check for at least one digit
+    
     if (!RegExp(r'[0-9]').hasMatch(value)) {
       return 'Password must contain at least one number';
     }
@@ -42,7 +42,7 @@ class Validators {
     return null;
   }
   
-  // Username validation
+  
   static String? validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return 'Username is required';
@@ -56,7 +56,7 @@ class Validators {
       return 'Username cannot be longer than 30 characters';
     }
     
-    // Allow alphanumeric and underscores only
+    
     if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
       return 'Username can only contain letters, numbers, and underscores';
     }
@@ -64,7 +64,7 @@ class Validators {
     return null;
   }
   
-  // File size validation
+  
   static String? validateFileSize(int fileSizeBytes, {int maxSizeBytes = 5 * 1024 * 1024}) {
     if (fileSizeBytes > maxSizeBytes) {
       final maxSizeMB = maxSizeBytes / (1024 * 1024);
@@ -73,7 +73,7 @@ class Validators {
     return null;
   }
   
-  // Required field validation
+  
   static String? validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -81,7 +81,7 @@ class Validators {
     return null;
   }
   
-  // Confirm password validation
+  
   static String? validateConfirmPassword(String? password, String? confirmPassword) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
       return 'Please confirm your password';
@@ -94,10 +94,10 @@ class Validators {
     return null;
   }
   
-  // Image file validation
+  
   static String? validateImageFile(String? fileName) {
     if (fileName == null || fileName.isEmpty) {
-      return null; // Optional field
+      return null; 
     }
     
     final allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];

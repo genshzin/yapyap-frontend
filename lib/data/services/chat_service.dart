@@ -7,10 +7,9 @@ class ChatService {
     try {
       final response = await _apiClient.get('/chat/rooms');
       
-      print('Chats API Response: ${response.data}');
       
       if (response.data != null) {
-        // Check if response is direct array or has chats property
+        
         List<dynamic> chatsData;
         if (response.data is List) {
           chatsData = response.data;
@@ -26,7 +25,6 @@ class ChatService {
             .cast<Chat>()
             .toList();
 
-        print('Parsed chats count: ${chats.length}');
 
         return {
           'success': true,
@@ -39,7 +37,6 @@ class ChatService {
         };
       }
     } catch (e) {
-      print('Error loading chats: $e');
       return {
         'success': false,
         'message': 'Failed to load chats: $e',
@@ -52,10 +49,9 @@ class ChatService {
         queryParameters: {'chatId': chatId},
       );
       
-      print('Messages API Response: ${response.data}');
       
       if (response.data != null) {
-        // Backend returns {messages: [...], pagination: {...}}
+        
         final messagesData = response.data['messages'];
         if (messagesData != null && messagesData is List) {
           final messages = (messagesData)
@@ -64,7 +60,6 @@ class ChatService {
               .cast<Message>()
               .toList();
 
-          print('Parsed messages count: ${messages.length}');
           
           return {
             'success': true,
@@ -79,7 +74,6 @@ class ChatService {
         'messages': <Message>[],
       };
     } catch (e) {
-      print('Error loading messages: $e');
       return {
         'success': false,
         'message': 'Failed to load messages: $e',
@@ -121,20 +115,17 @@ class ChatService {
       );
 
       if (response.data != null) {
-        // Handle the API response properly
+        
         final chatData = response.data;
         
-        // Check if the response is in the expected format
         if (chatData is Map<String, dynamic>) {
           final chat = Chat.fromJson(chatData);
-          print('Created/fetched chat with ID: ${chat.id}');
           
           return {
             'success': true,
             'chat': chat,
           };
         } else {
-          print('Unexpected response format: $chatData');
           return {
             'success': false,
             'message': 'Unexpected response format',
@@ -147,7 +138,6 @@ class ChatService {
         };
       }
     } catch (e) {
-      print('Error in createOrGetChat: $e');
       return {
         'success': false,
         'message': 'Failed to create chat: $e',
@@ -165,14 +155,12 @@ class ChatService {
         },
       );
 
-      print('Mark as read response: ${response.data}');
 
       return {
         'success': true,
         'data': response.data,
       };
     } catch (e) {
-      print('Error marking messages as read: $e');
       return {
         'success': false,
         'message': 'Failed to mark messages as read: $e',

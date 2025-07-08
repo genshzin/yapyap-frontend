@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/friendship_provider.dart'; // Add this import
+import '../../providers/friendship_provider.dart'; 
 import '../../../data/services/user_service.dart';
 import '../../../data/models/user_model.dart';
 
@@ -165,7 +165,6 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
       itemCount: _searchResults.length,
       itemBuilder: (context, index) {        final user = _searchResults[index];
         final currentUserId = context.read<AuthProvider>().user?.id;
-          // Don't show current user in search results
         if (user.id == currentUserId) {
           return const SizedBox.shrink();
         }

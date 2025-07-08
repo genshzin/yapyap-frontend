@@ -177,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               });
                             },
                           ),
-                        ),                        validator: (value) => Validators.validateConfirmPassword(
+                        ), validator: (value) => Validators.validateConfirmPassword(
                           _passwordController.text,
                           value,
                         ),

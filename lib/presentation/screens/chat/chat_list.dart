@@ -23,14 +23,12 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
         final authProvider = context.read<AuthProvider>();
         final friendshipProvider = context.read<FriendshipProvider>();
 
-        // Set current user ID in chat provider
         if (authProvider.user?.id != null) {
           chatProvider.setCurrentUserId(authProvider.user!.id);
         }
 
-        // Load chats and friends
         chatProvider.loadChats();
-        friendshipProvider.loadFriends(); // Ensure friends are loaded
+        friendshipProvider.loadFriends(); 
       }
     });
   }
@@ -129,7 +127,6 @@ class _ChatListScreenState extends State<ChatListScreen> with WidgetsBindingObse
                     },
                   );
                   
-                  // Refresh chat list when returning from chat screen
                   if (mounted && _chatProvider != null) {
                     await _chatProvider!.loadChats();
                   }

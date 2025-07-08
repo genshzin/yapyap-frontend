@@ -24,7 +24,6 @@ class FriendshipProvider with ChangeNotifier {
       final result = await _friendshipService.getFriends();
       _friends = result.map((data) => Friendship.fromJson(data)).toList();
     } catch (e) {
-      print("Error parsing friends data: $e");
       _friends = [];
     }
 
@@ -38,10 +37,8 @@ class FriendshipProvider with ChangeNotifier {
 
     try {
       final result = await _friendshipService.getFriendRequests();
-      print("Friend requests data: $result");
       _friendRequests = result.map((data) => Friendship.fromJson(data)).toList();
     } catch (e) {
-      print("Error parsing friend requests data: $e");
       _friendRequests = [];
     }
 
@@ -70,18 +67,14 @@ class FriendshipProvider with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       
-      // Update the URL format to use path parameter instead of request body
       final response = await _apiClient.delete('/friendships/delete/$friendshipId');
       
       if (response.statusCode == 200) {
-        // Remove the friendship from the list
         _friends.removeWhere((friendship) => friendship.id == friendshipId);
         notifyListeners();
       } else {
-        print('Error deleting friendship: ${response.data}');
       }
     } catch (e) {
-      print('Exception when deleting friendship: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
